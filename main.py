@@ -1,32 +1,51 @@
-from player_search import findPlayer
-from fpl_api import fetch_fpl_data, fetch_match_data
-from utils import map_team_ids
-from player_stats import assess_captaincy_potential, format_player_stats, positions, availability_statuses
+import sys
+from ui.menus import display_main_menu
+from ui.input_helpers import get_user_choice
+from data.loader import initialise_app
+from core.app import handle_exit
+from features.player_search import player_search
 
-players_data, team_data = fetch_fpl_data()
-teams = map_team_ids(team_data)
+players_data = None
+teams = None
 
-search_query = input('Enter player name: ').lower()
-
-player = findPlayer(players_data, search_query)
-
-if player:  
-    team_info = teams[player['team']]
-    match_data = fetch_match_data(player['id'])
-    position = positions[player['element_type']]
-    availability_status = availability_statuses[player['status']]
-    chance_of_playing_next_round = player['chance_of_playing_next_round']
-    captain_data = assess_captaincy_potential(match_data, position, availability_status, chance_of_playing_next_round)
-    formatted_player_stats = format_player_stats(player, team_info, captain_data, match_data, availability_status)
-    print(f"Player: {formatted_player_stats['first_name']} {formatted_player_stats['second_name']}")
-    print(f"Team: {formatted_player_stats['team']}")
-    print(f"Position: {formatted_player_stats['position']}")
-    print(f"Status: {formatted_player_stats['status']['availability']}")
-    print(f"Captain Score: {formatted_player_stats['captain_rating']['score']:.2f}")
-    print(f"Captain Rating: {formatted_player_stats['captain_rating']['rating']}")
-    print(f"Triple Captain Recommendation: {formatted_player_stats['captain_rating']['triple_recommendation']}")
-    if 'reason' in formatted_player_stats['captain_rating']:
-        print(f"Reason: {formatted_player_stats['captain_rating']['reason']}")
-else:
-    print("Player Not Found!")
+def main_loop():
+    global players_data, teams
     
+    while True:
+        try:
+            display_main_menu()
+            user_choice = get_user_choice()
+            
+            match user_choice:
+                case '1':
+                    player_search(players_data, teams)
+                case '2':
+                    # Compare two players
+                    pass
+                case '3':
+                    # Best captain choice for upcoming GW, based on users team
+                    pass
+                case '4':
+                    initialise_app()
+                case '5':
+                    handle_exit()
+                
+        except KeyboardInterrupt:
+            print('\n\n👋 Goodbye!')
+            sys.exit(0)
+        except Exception as e:
+            print(f'\n An unexpected error occured: {e}')
+    
+def main():
+    global players_data, teams
+    print("Welcome to FPL Assistant!")
+    
+    players_data, teams = initialise_app()
+    if not players_data:
+        print('Failed to start application. Please check your internet connection and try again!')
+        sys.exit(1)
+        
+    main_loop()
+
+if __name__ ==  '__main__':
+    main()

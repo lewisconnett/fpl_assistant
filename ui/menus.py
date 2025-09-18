@@ -1,0 +1,10 @@
+def display_main_menu():
+    print('\n' + '='*50)
+    print('⚽ FPL ASSISTANT')
+    print('='*50)
+    print('1. 🔍 Player Lookup')
+    print('2. ⚖️  Compare Players')
+    print('3. 👑 Squad Captain Optimiser')
+    print('4. 🔄 Refresh Data')
+    print('5. ❌ Exit')
+    print('-'*50)
