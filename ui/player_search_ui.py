@@ -14,4 +14,4 @@ def show_player(player: dict):
         if 'reason' in player['captain_data']:
             print(f"Reason: {player['captain_data']['reason']}")
     
-    print("="*50 + "\n")
+    print("="*50 + "\n")    

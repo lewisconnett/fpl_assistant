@@ -1,33 +1,44 @@
 import sys
+import pyinputplus as pyip
 from ui.menus import display_main_menu
 from ui.input_helpers import get_user_choice
 from data.loader import initialise_app
 from core.app import handle_exit
 from features.player_search import player_search
+from features.squad_captain_optimiser import run_captaincy_optimiser
+import logging
 
-players_data = None
-teams = None
+logging.basicConfig(
+    level=logging.DEBUG,  # Set to DEBUG to capture everything
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    filename='fpl_tool.log'
+)
 
 def main_loop():
-    global players_data, teams
-    
     while True:
         try:
             display_main_menu()
-            user_choice = get_user_choice()
+            user_choice = pyip.inputMenu(
+                [
+                    '🔍 Player Lookup',
+                    '⚖️  Compare Players',
+                    '👑 Squad Captain Optimiser',
+                    '🔄 Refresh Data',
+                    '❌ Exit'
+                ],
+                numbered=True
+            )
             
             match user_choice:
-                case '1':
-                    player_search(players_data, teams)
-                case '2':
-                    # Compare two players
-                    pass
-                case '3':
-                    # Best captain choice for upcoming GW, based on users team
-                    pass
-                case '4':
+                case '🔍 Player Lookup':
+                    player_search()
+                case '⚖️  Compare Players':
+                    pass  # compare players
+                case '👑 Squad Captain Optimiser':
+                    run_captaincy_optimiser()
+                case '🔄 Refresh Data':
                     initialise_app()
-                case '5':
+                case '❌ Exit':
                     handle_exit()
                 
         except KeyboardInterrupt:
@@ -37,15 +48,14 @@ def main_loop():
             print(f'\n An unexpected error occured: {e}')
     
 def main():
-    global players_data, teams
     print("Welcome to FPL Assistant!")
     
-    players_data, teams = initialise_app()
-    if not players_data:
+    if initialise_app():
+        print('Data loaded successfully')
+        main_loop()
+    else:
         print('Failed to start application. Please check your internet connection and try again!')
         sys.exit(1)
-        
-    main_loop()
 
 if __name__ ==  '__main__':
     main()
