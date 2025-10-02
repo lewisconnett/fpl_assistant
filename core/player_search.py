@@ -1,4 +1,4 @@
-from rapidfuzz import process, fuzz, utils # type: ignore
+from rapidfuzz import process, fuzz, utils
 from config import FUZZY_MATCH_MIN_SCORE
 from data.global_data import get_player_data
 from data.loader import initialise_app

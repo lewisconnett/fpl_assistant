@@ -1,7 +1,6 @@
 import sys
 import pyinputplus as pyip
 from ui.menus import display_main_menu
-from ui.input_helpers import get_user_choice
 from data.loader import initialise_app
 from core.app import handle_exit
 from features.player_search import player_search
