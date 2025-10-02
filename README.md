@@ -12,6 +12,7 @@ FPL Assistant is a terminal-based tool to help Fantasy Premier League (FPL) mana
 - ⚖️ **Compare Players** – Compare stats and form between two players.  
 - 👑 **Squad Captain Optimiser** – Get the best captain choice for your team for the upcoming gameweek.  
 - 🔄 **Refresh Data** – Fetch the latest FPL data from the official API.
+- 🌐 Future Plans – Planning to expand FPL Assistant into a Flask API and web application.
 
 ---
 
@@ -26,13 +27,17 @@ cd fpl_assistant
 
 2. Create and activate a virtual environment
 
+```bash
 python -m venv venv
 source venv/bin/activate  # Mac/Linux
 venv\Scripts\activate     # Windows
+```
 
 3. Install dependencies
 
+```bash
 pip install -r requirements.txt
+```
 
 ---
 
@@ -40,7 +45,9 @@ pip install -r requirements.txt
 
 Run the application
 
-python main.py
+```bash
+python3 main.py
+```
 
 ---
 
