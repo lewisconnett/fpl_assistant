@@ -1,7 +1,6 @@
 # FPL Assistant ⚽
 
 [![Python](https://img.shields.io/badge/python-3.11-blue?logo=python&logoColor=white)](https://www.python.org/)
-[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
 FPL Assistant is a terminal-based tool to help Fantasy Premier League (FPL) managers make smarter squad decisions, including player lookup, captain recommendations, and comparisons.
 
