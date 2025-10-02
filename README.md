@@ -53,13 +53,15 @@ python3 main.py
 
 ## Project Structure
 
+```
 fpl-assistant/
-├── main.py              # Main entry point
-├── config.py            # Configuration and constants
-├── core/                # Pure business logic functions
-├── features/            # Feature orchestration and data handling
-├── ui/                  # Terminal UI functions
-└── data/                # API fetching and data loading
+├── main.py          # Main entry point
+├── config.py        # Configuration and constants
+├── core/            # Business logic
+├── features/        # Feature orchestration
+├── ui/              # Terminal UI functions
+└── data/            # API fetching and loading
+```
 
 ---
 
