@@ -1,16 +1,20 @@
 from rapidfuzz import process, fuzz, utils
 from config import FUZZY_MATCH_MIN_SCORE
-from data.global_data import get_player_data
-from data.loader import initialise_app
 from core.captaincy_model import evaluate_captaincy
 from data.fpl_api import fetch_match_data
 import logging
-import requests
+from data.global_data import FPLData
 
 
-def find_player_by_name(search_query: str) -> dict | None:
-    players_data = get_player_data()
-    players = [f"{player['first_name']} {player['second_name']}" for player in players_data]
+def find_player_by_name(search_query: str, fpl_data: FPLData) -> dict | None:
+    try:
+        players_data = fpl_data.players
+    except ValueError as e:
+        # Maybe instead of just failing, try and automatically reinitialise player data before failing
+        logging.error(f'[find_player_by_name] failed to search for "{search_query}" because {e}')
+        return None
+        
+    players = [f'{player['first_name']} {player['second_name']}' for player in players_data]
     
     match = process.extractOne(
         search_query,
@@ -20,26 +24,26 @@ def find_player_by_name(search_query: str) -> dict | None:
     )
 
     if not match:
+        logging.warning(f'No match was found for "{search_query}"')
         return None
     
-    matched_name, score, index = match
+    _, score, index = match
     
     if score < FUZZY_MATCH_MIN_SCORE:
+        logging.warning(f'Fuzzy match score below threshold for "{search_query}" ({score} < {FUZZY_MATCH_MIN_SCORE})')
         return None
     else:
-        return players_data[index] 
+        player = players_data[index] 
+    
+        logging.info(f'{player['web_name']} was found for "{search_query}"')
+        return player
     
 def find_player_by_id(id: int) -> dict | None:
     try:
         players_data = get_player_data()
     except ValueError as e:
-        print(f'Error: {e}. Attempting to initialise data...')
-        initialise_app()
-        try:
-            players_data = get_player_data()
-        except ValueError as e:
-            print(f'Failed to initialise player data: {e}')
-            return None
+        print(f'[find_player_by_id] failed to search for "{id}" because {e}')
+        return None
         
     for player in players_data:
         if player['id'] == id:
@@ -50,19 +54,15 @@ def find_player_by_id(id: int) -> dict | None:
 def get_captain_data(player: dict) -> dict | None:
     try:
         match_data = fetch_match_data(player['id'])
-        position = player['element_type']
-        availability = player['status']    
-        chance_of_playing_next_round = player['chance_of_playing_next_round'] or 100
-        result = evaluate_captaincy(match_data, position, availability, chance_of_playing_next_round)
-        logging.info(f"Successfully evaluated captaincy for player ID {player['id']}")
-        return result
-        
-    except requests.RequestException as e:
-        logging.error(f'API Error: {e}')
-        return None
-    except ValueError as e:
-        logging.error(f'Data error: {e}')
-        return None
+        logging.info(f'Successfully got match data for player_id={player['id']}')
     except Exception as e:
-        logging.error(f'Unexpected error loading data: {e}')
+        logging.error(f'[get_captain_data] could not evaluate captaincy for player_id={player['id']}: {e}')
         return None
+
+    position = player['element_type']
+    availability = player['status']    
+    chance_of_playing_next_round = player['chance_of_playing_next_round'] or 100
+    result = evaluate_captaincy(match_data, position, availability, chance_of_playing_next_round)    
+    logging.info(f"Successfully evaluated captaincy for player ID {player['id']}")
+    
+    return result

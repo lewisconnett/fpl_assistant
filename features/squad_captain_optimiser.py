@@ -1,11 +1,13 @@
 import pyinputplus as pyip
-from ui.squad_captain_optimiser import show_menu, check_users_team, handle_wrong_team, display_best_captain_pick
+from ui.squad_captain_optimiser import check_users_team, handle_wrong_team, display_best_captain_pick
 from core.squad_captain_optimiser import get_team_info, get_squad_picks, get_squad_captaincy_ratings
 from core.player_search import find_player_by_id
 import logging
 
 def run_captaincy_optimiser():
-    show_menu()
+    '''Main entry point for squad captain optimiser'''
+    
+    logging.info('')
     while True:
         team_id = pyip.inputNum("Enter your team's ID: ") # 1080106
         team_info = get_team_info(team_id)

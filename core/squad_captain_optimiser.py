@@ -1,16 +1,36 @@
-import pprint
 from data.fpl_api import fetch_team_info, fetch_squad_picks
 from core.player_search import get_captain_data
 import logging
 import requests
 
 def get_team_info(team_id: int) -> dict:
+    '''Gets all the team info for the passed in team_id
+    
+    Args:
+        team_id: The FPL team ID
+
+    Returns:
+        dict: {
+            
+        }
+    
+    '''
+    '''
+    Returns:
+        dict: {
+            'success': bool,
+            'message': str,
+            'data': dict or None
+        }
+    '''
     try:
         return fetch_team_info(team_id)    
     except Exception as e:
         print(f'Error getting team info for ID {team_id}: {e}')
         
 def get_squad_picks(team_id: int, gw: int) -> dict | None:
+    # Update the exception handling to just catch them all with one to avoid duplicated/redundant error messages
+    
     logging.info(f'Getting squad picks for team ID: {team_id}, GW: {gw}')
     try:
         squad_picks = fetch_squad_picks(team_id, gw)

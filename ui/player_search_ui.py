@@ -1,17 +1,23 @@
-def show_player(player: dict): 
-    print("\n" + "="*50)
-    print(f"Player: {player['first_name']} {player['second_name']}")
-    print(f"Team: {player['team']}")
-    print(f"Position: {player['position']}")
-    print(f"Status: {player['status']}")
-    print(f"Chance of Playing Next Round: {player['chance_of_playing_next_round']}%")
+def show_player(player: dict):
+    if not player.get('success'):
+        print(player.get('message'))
+        return
     
-    if player['captain_data']:
+    data = player.get('data')
+    
+    print("\n" + "="*50)
+    print(f"Player: {data['first_name']} {data['second_name']}")
+    print(f"Team: {data['team']}")
+    print(f"Position: {data['position']}")
+    print(f"Status: {data['status']}")
+    print(f"Chance of Playing Next Round: {data['chance_of_playing_next_round']}%")
+    
+    if data['captain_data']:
         print("\nCaptaincy Assessment:")
-        print(f"Score: {player['captain_data']['score']:.2f}")
-        print(f"Rating: {player['captain_data']['rating']}")
-        print(f"Triple Captain Recommendation: {player['captain_data']['triple_recommendation']}")
-        if 'reason' in player['captain_data']:
-            print(f"Reason: {player['captain_data']['reason']}")
+        print(f"Score: {data['captain_data']['score']:.2f}")
+        print(f"Rating: {data['captain_data']['rating']}")
+        print(f"Triple Captain Recommendation: {data['captain_data']['triple_recommendation']}")
+        if 'reason' in data['captain_data']:
+            print(f"Reason: {data['captain_data']['reason']}")
     
     print("="*50 + "\n")    

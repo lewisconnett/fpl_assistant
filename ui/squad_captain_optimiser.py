@@ -1,7 +1,4 @@
 import pyinputplus as pyip
-
-def show_menu():
-    print('Squad Captain Optimiser: ')
     
 def check_users_team(team_info):
     print(f'Team Name: {team_info['name']}, {team_info['player_region_iso_code_long']}')
@@ -52,4 +49,4 @@ def display_best_captain_pick(result):
         for i, (name, score_data) in enumerate(data['alternatives'][1:4], 2):
             print(f'   {i}. {name}: {score_data['score']:.1f}')
     
-    print('\n' + '='*60)
+    print('\n' + '='*50)

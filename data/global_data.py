@@ -1,28 +1,37 @@
-player_data = None
-team_data = None
+class FPLData:
+    def __init__(self, raw_data: dict):
+        self._raw = raw_data
+        self._players = None
+        self._teams = None
 
-def init_data(players, teams):
-    global player_data, team_data
-    player_data = players
-    team_data = teams
-    
-def get_player_data():
-    if player_data is None:
-        raise ValueError('Player data has not been initialised')
-    else:
-        return player_data
+    @property
+    def players(self):
+        """Returns list of all players"""
 
-def get_team_data():
-    if team_data is None:
-        raise ValueError('Team data has not been initialised')
-    else:
-        return team_data
+        # Early return if already cached
+        if self._players is not None:
+            return self._players
 
-def update_player_data(new_player_data=None, new_team_data=None):
-    global player_data, team_data
-    
-    if not new_player_data:
-        player_data = new_player_data
-    
-    if not new_team_data:
-        team_data = new_team_data
+        if "elements" not in self._raw:
+            raise ValueError("FPL data is missing required 'elements' key")
+
+        if not self._raw["elements"]:
+            raise ValueError("Players data is empty")
+
+        return self._raw["elements"]
+
+    @property
+    def teams(self):
+        """Returns list of all teams"""
+
+        # Early return if already cached
+        if self._teams is not None:
+            return self._teams
+
+        if "teams" not in self._raw:
+            raise ValueError("FPL data is missing required 'teams' key")
+
+        if not self._raw["teams"]:
+            raise ValueError("Teams data is empty")
+
+        return self._raw["teams"]
