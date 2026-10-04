@@ -48,7 +48,6 @@ def main_loop(fpl_data: FPLData):
         except Exception as e:
             print(f"\n An unexpected error occured: {e}")
 
-
 def main():
     print("Welcome to FPL Assistant!")
     logging.info("Starting FPL Assitant")

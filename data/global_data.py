@@ -18,7 +18,8 @@ class FPLData:
         if not self._raw["elements"]:
             raise ValueError("Players data is empty")
 
-        return self._raw["elements"]
+        self._players = self._raw["elements"]
+        return self._players
 
     @property
     def teams(self):
@@ -34,4 +35,12 @@ class FPLData:
         if not self._raw["teams"]:
             raise ValueError("Teams data is empty")
 
-        return self._raw["teams"]
+        self._teams = self._raw["teams"]
+        return self._teams
+
+    def get_team_by_id(self, team_id: int) -> dict:
+        for team in self.teams:
+            if team["id"] == team_id:
+                return team
+            
+        raise ValueError(f"Team {team_id} not found")

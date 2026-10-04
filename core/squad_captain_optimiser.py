@@ -4,25 +4,6 @@ import logging
 import requests
 
 def get_team_info(team_id: int) -> dict:
-    '''Gets all the team info for the passed in team_id
-    
-    Args:
-        team_id: The FPL team ID
-
-    Returns:
-        dict: {
-            
-        }
-    
-    '''
-    '''
-    Returns:
-        dict: {
-            'success': bool,
-            'message': str,
-            'data': dict or None
-        }
-    '''
     try:
         return fetch_team_info(team_id)    
     except Exception as e:

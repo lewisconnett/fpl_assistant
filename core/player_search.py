@@ -6,16 +6,11 @@ import logging
 from data.global_data import FPLData
 
 
-def find_player_by_name(search_query: str, fpl_data: FPLData) -> dict | None:
-    try:
-        players_data = fpl_data.players
-    except ValueError as e:
-        # Maybe instead of just failing, try and automatically reinitialise player data before failing
-        logging.error(f'[find_player_by_name] failed to search for "{search_query}" because {e}')
-        return None
-        
+def find_player_by_name(search_query: str, fpl_data: FPLData) -> dict:
+
+    players_data = fpl_data.players
     players = [f'{player['first_name']} {player['second_name']}' for player in players_data]
-    
+
     match = process.extractOne(
         search_query,
         players,
@@ -24,20 +19,20 @@ def find_player_by_name(search_query: str, fpl_data: FPLData) -> dict | None:
     )
 
     if not match:
-        logging.warning(f'No match was found for "{search_query}"')
-        return None
-    
+        raise ValueError(f'No match was found for "{search_query}"')
+
     _, score, index = match
-    
+
     if score < FUZZY_MATCH_MIN_SCORE:
-        logging.warning(f'Fuzzy match score below threshold for "{search_query}" ({score} < {FUZZY_MATCH_MIN_SCORE})')
-        return None
+        raise ValueError(
+            f'Fuzzy match score below threshold for "{search_query}" ({score} < {FUZZY_MATCH_MIN_SCORE})'
+        )
     else:
         player = players_data[index] 
-    
+
         logging.info(f'{player['web_name']} was found for "{search_query}"')
         return player
-    
+
 def find_player_by_id(id: int) -> dict | None:
     try:
         players_data = get_player_data()
