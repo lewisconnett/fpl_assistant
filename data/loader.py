@@ -1,13 +1,14 @@
-from data.fpl_api import fetch_fpl_data
-from data.global_data import FPLData
+from data.FPLClient import FPLClient
+from data.FPLDataService import FPLDataService
 import logging, requests
 
 
-def initialise_app() -> FPLData | None:
+def initialise_app() -> FPLDataService | None:
     try:
-        raw_data = fetch_fpl_data()
-        fpl_data = FPLData(raw_data)
-        
+        client = FPLClient()
+        raw_data = client.fetch_fpl_data()
+        fpl_data = FPLDataService(raw_data)
+
         _ = fpl_data.players
         _ = fpl_data.teams
 

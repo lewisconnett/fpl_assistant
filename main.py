@@ -1,11 +1,11 @@
 import sys
 import pyinputplus as pyip
-from data.global_data import FPLData
+from data.FPLDataService import FPLDataService
 from ui.menus import display_main_menu
 from data.loader import initialise_app
 from core.app import handle_exit
 from features.player_search import run_player_search
-from features.squad_captain_optimiser import run_captaincy_optimiser
+# from features.squad_captain_optimiser import run_captaincy_optimiser
 import logging
 
 logging.basicConfig(
@@ -15,7 +15,7 @@ logging.basicConfig(
 )
 
 
-def main_loop(fpl_data: FPLData):
+def main_loop(fpl_data: FPLDataService):
     while True:
         try:
             display_main_menu()
@@ -32,11 +32,13 @@ def main_loop(fpl_data: FPLData):
 
             match user_choice:
                 case "🔍 Player Lookup":
+                    pass
                     run_player_search(fpl_data)
                 case "⚖️  Compare Players":
                     pass  # compare players
                 case "👑 Squad Captain Optimiser":
-                    run_captaincy_optimiser()
+                    pass
+                    # run_captaincy_optimiser()
                 case "🔄 Refresh Data":
                     initialise_app()
                 case "❌ Exit":

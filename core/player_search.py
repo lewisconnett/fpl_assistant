@@ -1,12 +1,11 @@
 from rapidfuzz import process, fuzz, utils
 from config import FUZZY_MATCH_MIN_SCORE
 from core.captaincy_model import evaluate_captaincy
-from data.fpl_api import fetch_match_data
 import logging
-from data.global_data import FPLData
+from data.FPLDataService import FPLDataService
 
 
-def find_player_by_name(search_query: str, fpl_data: FPLData) -> dict:
+def find_player_by_name(search_query: str, fpl_data: FPLDataService) -> dict:
 
     players_data = fpl_data.players
     players = [f'{player['first_name']} {player['second_name']}' for player in players_data]

@@ -1,4 +1,4 @@
-class FPLData:
+class FPLDataService:
     def __init__(self, raw_data: dict):
         self._raw = raw_data
         self._players = None

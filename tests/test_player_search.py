@@ -1,5 +1,5 @@
 from features.player_search import search_player
-from data.global_data import FPLData
+from data.FPLDataService import FPLData
 
 import pytest
 
