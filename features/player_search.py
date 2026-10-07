@@ -14,10 +14,11 @@ def run_player_search(fpl_data: FPLDataService):
         player_name = pyip.inputStr("Enter player name: ").lower()
 
         result = search_player(player_name, fpl_data)
+        print(result)
 
-        packaged_player = prepare_player_profile(result["data"]["player"])
+        # packaged_player = prepare_player_profile(result["data"]["player"], result)
 
-        show_player(packaged_player)
+        # show_player(packaged_player)
 
         continue_choice = pyip.inputYesNo(
             "Would you like to lookup another player? [Y/N]: "

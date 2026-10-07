@@ -3,17 +3,17 @@ from config import AVAILABILITY_STATUSES, POSITIONS
 
 def prepare_player_profile(player: dict, team: dict) -> dict:
 
-    chance_of_playing = player.get("chance_of_playing_next_round")
-
     return {
-        "name": f'{player.get("first_name")} {player.get("second_name")}',
-        "position": POSITIONS.get(player.get("element_type")),
-        "team": team.get("name"),
-        "price": player.get("now_cost") / 10,
-        "status": AVAILABILITY_STATUSES.get(player.get("status")),
-        "chance_of_playing_next_round": (
-            chance_of_playing if chance_of_playing is not None else 100
+        "name": (
+            f'{player.get("first_name")} {player.get("second_name")}'
+            if player.get("first_name") and player.get("second_name")
+            else (player.get("web_name") or "Unknown")
         ),
+        "position": POSITIONS.get(player.get("element_type")) or "Unknown",
+        "team": team.get("name") or team.get("short_name") or "Unknown",
+        "price": (player.get("now_cost") or 0) / 10,
+        "status": AVAILABILITY_STATUSES.get(player.get("status")) or "Unknown",
+        "chance_of_playing_next_round": player.get("chance_of_playing_next_round"),
     }
 
 
