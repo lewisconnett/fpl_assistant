@@ -5,16 +5,14 @@ import logging
 from data.FPLDataService import FPLDataService
 
 
-def find_player_by_name(search_query: str, fpl_data: FPLDataService) -> dict:
+def find_player_by_name(search_query: str, players: dict) -> dict:
 
-    players_data = fpl_data.players
-    players = [f'{player['first_name']} {player['second_name']}' for player in players_data]
+    searchable_player_names = [
+        f"{player['first_name']} {player['second_name']}" for player in players
+    ]
 
     match = process.extractOne(
-        search_query,
-        players,
-        scorer=fuzz.WRatio,
-        processor=utils.default_process
+        search_query, searchable_player_names, scorer=fuzz.WRatio, processor=utils.default_process
     )
 
     if not match:
@@ -27,10 +25,11 @@ def find_player_by_name(search_query: str, fpl_data: FPLDataService) -> dict:
             f'Fuzzy match score below threshold for "{search_query}" ({score} < {FUZZY_MATCH_MIN_SCORE})'
         )
     else:
-        player = players_data[index] 
+        player = players[index]
 
         logging.info(f'{player['web_name']} was found for "{search_query}"')
         return player
+
 
 def find_player_by_id(id: int) -> dict | None:
     try:
@@ -38,25 +37,30 @@ def find_player_by_id(id: int) -> dict | None:
     except ValueError as e:
         print(f'[find_player_by_id] failed to search for "{id}" because {e}')
         return None
-        
+
     for player in players_data:
-        if player['id'] == id:
+        if player["id"] == id:
             return player
 
     return None
 
+
 def get_captain_data(player: dict) -> dict | None:
     try:
-        match_data = fetch_match_data(player['id'])
-        logging.info(f'Successfully got match data for player_id={player['id']}')
+        match_data = fetch_match_data(player["id"])
+        logging.info(f"Successfully got match data for player_id={player['id']}")
     except Exception as e:
-        logging.error(f'[get_captain_data] could not evaluate captaincy for player_id={player['id']}: {e}')
+        logging.error(
+            f"[get_captain_data] could not evaluate captaincy for player_id={player['id']}: {e}"
+        )
         return None
 
-    position = player['element_type']
-    availability = player['status']    
-    chance_of_playing_next_round = player['chance_of_playing_next_round'] or 100
-    result = evaluate_captaincy(match_data, position, availability, chance_of_playing_next_round)    
+    position = player["element_type"]
+    availability = player["status"]
+    chance_of_playing_next_round = player["chance_of_playing_next_round"] or 100
+    result = evaluate_captaincy(
+        match_data, position, availability, chance_of_playing_next_round
+    )
     logging.info(f"Successfully evaluated captaincy for player ID {player['id']}")
-    
+
     return result

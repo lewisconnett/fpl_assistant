@@ -1,7 +1,10 @@
+import pprint
+
 from core.player_search import find_player_by_name
 from core.player_search import get_captain_data
 from data.data_preparer import prepare_player_profile
 from data.FPLDataService import FPLDataService
+from data.data_preparer import prepare_player_profile
 from ui.player_search_ui import show_player
 import logging
 import pyinputplus as pyip
@@ -9,24 +12,20 @@ import pyinputplus as pyip
 
 def run_player_search(fpl_data: FPLDataService):
     """Main entry point for player search"""
-    logging.info("Running player search feature")
     while True:
         player_name = pyip.inputStr("Enter player name: ").lower()
 
         result = search_player(player_name, fpl_data)
-        print(result)
+        player_profile = prepare_player_profile(
+            result["data"]["player"], result["data"]["team"]
+        )
 
-        # packaged_player = prepare_player_profile(result["data"]["player"], result)
-
-        # show_player(packaged_player)
+        show_player(player_profile)
 
         continue_choice = pyip.inputYesNo(
             "Would you like to lookup another player? [Y/N]: "
         )
         if continue_choice == "no":
-            logging.info(
-                "Player search feature has closed. Redirecting user back to main menu"
-            )
             break
 
 

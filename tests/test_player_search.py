@@ -1,10 +1,24 @@
-from features.player_search import search_player
-from data.FPLDataService import FPLData
+from unittest.mock import Mock
 
 import pytest
+from core import player_search
+from core.player_search import find_player_by_name
 
 
-def test_if_no_player_found_raise_value_error():
+def test_find_player_by_name_returns_matching_player():
+    palmer = {"first_name": "Cole", "second_name": "Palmer", "web_name": "Palmer"}
+
+    saka = {"first_name": "Bakayo", "second_name": "Saka", "web_name": "Saka"}
+
+    fpl_player_data = Mock()
+    fpl_player_data = [palmer, saka]
+
+    result = find_player_by_name("Cole Palmer", fpl_player_data)
+
+    assert result == palmer
+
+
+def test_find_player_by_name_raises_value_error_if_no_match_is_found():
     raw_data = {
         "elements": [
             {"id": 1, "first_name": "Cole", "second_name": "Palmer"},
@@ -12,7 +26,19 @@ def test_if_no_player_found_raise_value_error():
         ]
     }
 
-    fpl_data = FPLData(raw_data)
+    fpl_player_data = Mock()
+    fpl_player_data = raw_data["elements"]
 
     with pytest.raises(ValueError):
-        search_player("haaland", fpl_data)
+        find_player_by_name("haaland", fpl_player_data)
+
+
+def test_find_player_by_name_raises_when_score_is_below_threshold(monkeypatch):
+    players = [
+        {"first_name": "Cole", "second_name": "Palmer", "web_name": "Palmer"},
+        {"first_name": "Bukayo", "second_name": "Saka", "web_name": "Saka"},
+    ]
+    monkeypatch.setattr(player_search, "FUZZY_MATCH_MIN_SCORE", 101)
+
+    with pytest.raises(ValueError, match="Fuzzy match score below threshold"):
+        player_search.find_player_by_name("Cole Palmer", players)
